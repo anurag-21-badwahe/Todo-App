@@ -4,11 +4,20 @@ import { v4 as uuidv4 } from "uuid";
 export const Note = () => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
-
+  
   const handleChange = (e) => {
     setTodo(e.target.value);
   };
-  const handleEdit = () => {};
+
+  const handleEdit = (id) => {
+    const todoToEdit = todos.find(item => item.id === id);
+    if (todoToEdit) {
+      setTodo(todoToEdit.todo);
+      setTodos(todos.filter((todo) => todo.id !== id));
+    }
+  };
+  
+
   const handleAdd = () => {
     if (todo.length > 3) {
       setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
@@ -56,7 +65,7 @@ export const Note = () => {
           className="bg-violet-300 w-16 rounded-md min-h-10 ml-6 hover:font-bold"
           onClick={handleAdd}
         >
-          Add
+          Save
         </button>
       </div>
       <div>
@@ -70,14 +79,16 @@ export const Note = () => {
                 onChange={() => handleCheckbox(item.id, item.isCompleted)}
               />
               <div
-                className={`ml-3 ${item.isCompleted ? "line-through" : ""}`}
+                className={`ml-3 w-72 ${
+                  item.isCompleted ? "line-through" : ""
+                }`}
                 key={index}
               >
                 {item.todo}
               </div>
               <div className="buttons w-20">
-                <button className="mx-2" onClick={handleEdit}>
-                  <span className="material-symbols-outlined bg-violet-300 rounded-md hover:bg-violet-500 hover:w-8">
+                <button className="mx-2" onClick={() => handleEdit(item.id)}>
+                  <span className="material-symbols-outlined bg-violet-300 rounded-md hover:bg-violet-500 ">
                     edit_note
                   </span>
                 </button>
@@ -86,7 +97,7 @@ export const Note = () => {
                     handleDelete(item.id);
                   }}
                 >
-                  <span className="material-symbols-outlined bg-red-600 rounded-md hover:bg-red-700 hover:w-8">
+                  <span className="material-symbols-outlined bg-red-600 rounded-md hover:bg-red-700">
                     delete
                   </span>
                 </button>
