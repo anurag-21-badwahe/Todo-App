@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { v4 as uuidv4 } from 'uuid'
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const Note = () => {
   const [todo, setTodo] = useState("");
@@ -9,7 +9,6 @@ export const Note = () => {
     setTodo(e.target.value);
   };
   const handleEdit = () => {};
-  const handleDelete = () => {};
   const handleAdd = () => {
     if (todo.length > 3) {
       setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
@@ -20,14 +19,24 @@ export const Note = () => {
     // console.log(todos);
   };
 
-  const handleCheckbox = (id) => {
-    setTodos(todos.map((todo) => {
+  const handleCheckbox = (id, isCompleted) => {
+    // console.log(id);
+    // console.log(isCompleted);
+    setTodos(
+      todos.map((todo) => {
         if (todo.id === id) {
-          return {...todo, isCompleted: !todo.isCompleted};
+          return { ...todo, isCompleted: !todo.isCompleted };
         }
         return todo;
-      }));
+      })
+    );
   };
+
+  const handleDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+    //it just exclude the item
+  };
+
   return (
     <div className="w-96 min-h-96 bg-violet-50 mt-20 mx-auto rounded-md">
       <div className="flex justify-between mx-2 font-protest-riot">
@@ -54,11 +63,11 @@ export const Note = () => {
         <div className="text-center font-protest-riot">Your Todos</div>
         {todos.map((item, index) => {
           return (
-            <div className="flex justify-between border border-violet-500 rounded p-2">
+            <div className="flex justify-between border border-violet-500 rounded p-2 m-3">
               <input
-                 type="checkbox"
-                 checked={item.isCompleted}
-                 onChange={() => handleCheckbox(item.id)}
+                type="checkbox"
+                checked={item.isCompleted}
+                onChange={() => handleCheckbox(item.id, item.isCompleted)}
               />
               <div
                 className={`ml-3 ${item.isCompleted ? "line-through" : ""}`}
@@ -72,7 +81,11 @@ export const Note = () => {
                     edit_note
                   </span>
                 </button>
-                <button onClick={handleDelete}>
+                <button
+                  onClick={() => {
+                    handleDelete(item.id);
+                  }}
+                >
                   <span className="material-symbols-outlined bg-red-600 rounded-md hover:bg-red-700 hover:w-8">
                     delete
                   </span>
