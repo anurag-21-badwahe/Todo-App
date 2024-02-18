@@ -5,6 +5,19 @@ export const Note = ({ darkMode, setDarkMode }) => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
 
+  const handleDarkMode = () => {
+    const mode = !darkMode;
+    setDarkMode(mode);
+    localStorage.setItem("theme", JSON.stringify(mode));
+  };
+
+  useEffect(() => {
+    const stroredTheme = localStorage.getItem("theme");
+    if (stroredTheme) {
+      setDarkMode(JSON.parse(stroredTheme));
+    }
+  }, []);
+
   useEffect(() => {
     try {
       const todoString = localStorage.getItem("todos");
@@ -64,10 +77,6 @@ export const Note = ({ darkMode, setDarkMode }) => {
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
     saveToLocalStorage(updatedTodos);
-  };
-
-  const handleDarkMode = () => {
-    setDarkMode(!darkMode);
   };
 
   return (
